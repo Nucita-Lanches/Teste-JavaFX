@@ -1,0 +1,75 @@
+/* Nucita Lanches — vinho, carvão, baunilha e avelã. */
+.root { -fx-font-family: "Segoe UI"; -fx-font-size: 13px; -fx-background-color: #F6F2EB; -fx-text-fill: #29242A; -fx-focus-color: #982D48; -fx-faint-focus-color: transparent; }
+.label { -fx-text-fill: #29242A; }
+.button, .toggle-button { -fx-cursor: hand; }
+.sidebar { -fx-background-color: #000000; -fx-padding: 20 18; }
+.brand-caption { -fx-font-size: 9px; -fx-text-fill: #CFBFA9; -fx-padding: 0 0 16 2; -fx-font-weight: bold; }
+.side-caption { -fx-font-size: 10px; -fx-text-fill: #8F8585; -fx-padding: 20 0 8 9; -fx-font-weight: bold; }
+.nav-button { -fx-background-color: transparent; -fx-text-fill: #BDB5B4; -fx-padding: 14 13; -fx-background-radius: 10; -fx-alignment: center-left; -fx-font-weight: bold; }
+.nav-button:hover { -fx-background-color: #292124; -fx-text-fill: #FFF4E4; }
+.nav-active { -fx-background-color: #75223B; -fx-text-fill: #FFF7EA; }
+.side-note { -fx-background-color: #211A1B; -fx-border-color: #3E2A30; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 16 13; }
+.note-title { -fx-text-fill: #EDD5B6; -fx-font-family: "Georgia"; -fx-font-size: 15px; }
+.note-copy { -fx-text-fill: #A89A98; -fx-font-size: 11px; -fx-line-spacing: 3; }
+.profile { -fx-padding: 18 0 0; }
+.avatar { -fx-background-color: #74233B; -fx-text-fill: #F6DEC1; -fx-padding: 9 13; -fx-background-radius: 30; -fx-font-weight: bold; }
+.profile-name { -fx-text-fill: #E8DDD3; -fx-font-size: 11px; -fx-font-weight: bold; }
+.topbar { -fx-padding: 26 28 22; }
+.eyebrow { -fx-text-fill: #996C65; -fx-font-size: 10px; -fx-font-weight: bold; }
+.page-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #33252A; }
+.open-status { -fx-background-color: #E6EADD; -fx-background-radius: 20; -fx-text-fill: #536843; -fx-padding: 8 11; -fx-font-size: 10px; -fx-font-weight: bold; }
+.menu-scroll, .menu-scroll > .viewport { -fx-background-color: transparent; }
+.menu-scroll { -fx-padding: 0; -fx-background-insets: 0; }
+.menu-content { -fx-padding: 0 28 25; }
+.hero { -fx-background-color: #000000; -fx-background-radius: 19; -fx-padding: 22 21 22 28; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(55,19,28,0.13), 18, 0, 0, 6); }
+.hero-eyebrow { -fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #D8AB70; }
+.hero-title { -fx-font-family: "Georgia"; -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #FBF0DF; -fx-padding: -6 0; }
+.hero-copy { -fx-text-fill: #BDAFAA; -fx-font-size: 11px; -fx-max-width: 285; }
+.hero-button { -fx-background-color: #81253F; -fx-background-radius: 8; -fx-text-fill: #FFF5E7; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 11 15; }
+.hero-button:hover { -fx-background-color: #A13654; }
+.section-title { -fx-font-size: 19px; -fx-text-fill: #38282B; -fx-font-weight: bold; }
+.muted-label { -fx-font-size: 11px; -fx-text-fill: #8D7E7B; }
+.tiny-caption { -fx-font-size: 9px; -fx-text-fill: #A18D83; -fx-font-weight: bold; }
+.search-box { -fx-background-color: #FFFDFA; -fx-background-radius: 11; -fx-border-color: #E6DED4; -fx-border-radius: 11; -fx-padding: 4 15; }
+.search-icon { -fx-font-size: 24px; -fx-text-fill: #925C68; }
+.search-field { -fx-background-color: transparent; -fx-padding: 10 0; -fx-prompt-text-fill: #A3978A; -fx-font-size: 12px; }
+.category-chip { -fx-background-color: #EDE6DC; -fx-background-radius: 20; -fx-text-fill: #7B6B64; -fx-padding: 9 17; -fx-font-size: 11px; -fx-font-weight: bold; }
+.category-chip:hover { -fx-background-color: #E4D7CC; }
+.category-chip:selected { -fx-background-color: #74223A; -fx-text-fill: #FFF5E5; -fx-effect: dropshadow(gaussian, rgba(91,29,46,0.12), 7, 0, 0, 3); }
+.product-card { -fx-background-color: #FFFDFA; -fx-background-radius: 13; -fx-border-radius: 13; -fx-border-color: #E8DED3; -fx-padding: 8; -fx-spacing: 12; }
+.product-card:hover { -fx-border-color: #C29184; -fx-effect: dropshadow(gaussian, rgba(80,41,38,0.12), 15, 0, 0, 5); }
+.product-photo { -fx-background-color: #F1E9DE; -fx-background-radius: 9; }
+.product-tag { -fx-background-color: #FFFAF0; -fx-background-radius: 5; -fx-padding: 4 7; -fx-font-size: 8px; -fx-text-fill: #79263F; -fx-font-weight: bold; }
+.product-name { -fx-font-size: 13px; -fx-text-fill: #36282B; -fx-font-weight: bold; }
+.product-description { -fx-font-size: 10px; -fx-text-fill: #95857B; -fx-min-height: 30; }
+.product-price { -fx-font-size: 16px; -fx-text-fill: #762139; -fx-font-weight: bold; }
+.product-body { -fx-padding: 0 4 5; -fx-spacing: 7; }
+.add-button { -fx-background-color: #74223A; -fx-background-radius: 9; -fx-font-size: 19px; -fx-text-fill: #FFF3E3; -fx-padding: 1 11; }
+.add-button:hover { -fx-background-color: #A03450; }
+.bottom-note { -fx-padding: 8 0; }
+.order-panel { -fx-background-color: #FFFDFA; -fx-padding: 29 20 23; -fx-border-color: #E5DCD2; -fx-border-width: 0 0 0 1; }
+.order-title { -fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #38252B; }
+.count-bubble { -fx-background-color: #F0E2E2; -fx-text-fill: #802C41; -fx-background-radius: 20; -fx-padding: 5 10; -fx-font-weight: bold; }
+.table-box { -fx-background-color: #F6F0E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 14; }
+.table-name { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4E3034; }
+.text-button { -fx-background-color: transparent; -fx-text-fill: #8D354E; -fx-font-weight: bold; -fx-font-size: 10px; }
+.cart-scroll, .cart-scroll > .viewport { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.cart-item-name { -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #50343A; }
+.cart-price { -fx-text-fill: #873B4B; -fx-font-size: 11px; -fx-font-weight: bold; }
+.quantity { -fx-background-color: #F5EFE7; -fx-background-radius: 5; -fx-text-fill: #78484E; -fx-padding: 2 7; -fx-font-weight: bold; }
+.status-message { -fx-font-size: 11px; -fx-text-fill: #9B7B70; }
+.subtotal { -fx-font-size: 12px; -fx-text-fill: #63494A; }
+.total-label { -fx-font-size: 13px; -fx-font-weight: bold; }
+.total-price { -fx-font-size: 24px; -fx-text-fill: #76223D; -fx-font-weight: bold; }
+.checkout-button { -fx-background-color: linear-gradient(to right, #76223D, #9D3550); -fx-background-radius: 11; -fx-text-fill: #FFF5E7; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 16 9; -fx-effect: dropshadow(gaussian, rgba(112,29,53,0.19), 12, 0, 0, 4); }
+.checkout-button:hover { -fx-background-color: #A33A57; }
+.fine-print { -fx-font-size: 8px; -fx-text-fill: #B4A397; }
+.separator .line { -fx-border-color: #E8DED4; -fx-border-width: 1 0 0; }
+.sidebar .separator .line { -fx-border-color: #2E2627; }
+.scroll-bar:vertical { -fx-background-color: transparent; -fx-pref-width: 7; }
+.scroll-bar:vertical .track { -fx-background-color: transparent; }
+.scroll-bar:vertical .thumb { -fx-background-color: #CDBEB4; -fx-background-radius: 4; }
+.scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-padding: 0; -fx-background-color: transparent; }
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow { -fx-padding: 0; }
+
+
