@@ -9,9 +9,10 @@
       <Label text="FEITO PARA DAR VONTADE." styleClass="brand-caption"/>
       <Separator/>
       <Label text="EXPLORE" styleClass="side-caption"/>
-      <Button text="▦   Cardápio" styleClass="nav-button,nav-active" maxWidth="Infinity" onAction="#showMenu"/>
-      <Button text="▣   Mesas" styleClass="nav-button" maxWidth="Infinity" onAction="#showTables"/>
-      <Button text="◷   Meus pedidos" styleClass="nav-button" maxWidth="Infinity" onAction="#showOrders"/>
+      <Button fx:id="menuNav" text="▦   Cardápio" styleClass="nav-button,nav-active" maxWidth="Infinity" onAction="#showMenu"/>
+      <Button fx:id="productsNav" text="＋   Produtos" styleClass="nav-button" maxWidth="Infinity" onAction="#showProducts"/>
+      <Button fx:id="tablesNav" text="▣   Mesas" styleClass="nav-button" maxWidth="Infinity" onAction="#showTables"/>
+      <Button fx:id="ordersNav" text="◷   Pedidos" styleClass="nav-button" maxWidth="Infinity" onAction="#showOrders"/>
       <Region VBox.vgrow="ALWAYS"/>
       <VBox styleClass="side-note" spacing="8"><Label text="O seu doce favorito." styleClass="note-title"/><Label text="Um pouco de chocolate. Muito de Nucita." styleClass="note-copy" wrapText="true"/></VBox>
       <HBox alignment="CENTER_LEFT" spacing="9" styleClass="profile"><Label text="N" styleClass="avatar"/><VBox spacing="3"><Label text="Nucita Lanches" styleClass="profile-name"/><Label text="Atendimento local" styleClass="note-copy"/></VBox></HBox>
@@ -19,15 +20,15 @@
   </left>
   <center>
     <BorderPane styleClass="main-area">
-      <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><VBox spacing="5"><Label text="BEM-VINDO À NUCITA" styleClass="eyebrow"/><Label text="Hoje pede algo especial." styleClass="page-title"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="●  Estamos abertos" styleClass="open-status"/></HBox></top>
+      <top><HBox alignment="CENTER_LEFT" styleClass="topbar"><VBox spacing="5"><Label text="BEM-VINDO À NUCITA" styleClass="eyebrow"/><Label text="Hoje pede algo especial." styleClass="page-title"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="●  Atendimento local" styleClass="open-status"/></HBox></top>
       <center><ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="menu-scroll"><VBox spacing="23" styleClass="menu-content">
         <HBox styleClass="hero" minHeight="222" alignment="CENTER_LEFT">
-          <VBox spacing="13" HBox.hgrow="ALWAYS"><Label text="AQUELE SABOR QUE ABRAÇA" styleClass="hero-eyebrow"/><Label text="Seu momento." styleClass="hero-title"/><Label text="Seu Nucita." styleClass="hero-title"/><Label text="Chocolate, avelã e uma pausa deliciosa no seu dia." styleClass="hero-copy" wrapText="true"/><Button text="Descobrir os favoritos   →" styleClass="hero-button" onAction="#showFavorites"/></VBox>
+          <VBox spacing="13" HBox.hgrow="ALWAYS"><Label text="AQUELE SABOR QUE ABRAÇA" styleClass="hero-eyebrow"/><Label text="Seu momento." styleClass="hero-title"/><Label text="Seu Nucita." styleClass="hero-title"/><Label text="Cadastre seus produtos e prepare o atendimento." styleClass="hero-copy" wrapText="true"/><Button text="Gerenciar produtos   →" styleClass="hero-button" onAction="#showProducts"/></VBox>
           <ImageView fitWidth="210" fitHeight="210" preserveRatio="true"><image><Image url="@src/main/resources/images/logo.png"/></image></ImageView>
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="14"><VBox spacing="5"><Label text="Escolha seu próximo favorito" styleClass="section-title"/><Label text="Feito com carinho, servido do seu jeito." styleClass="muted-label"/></VBox><Region HBox.hgrow="ALWAYS"/><Label text="DA CASA" styleClass="tiny-caption"/></HBox>
         <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="10"><Label text="⌕" styleClass="search-icon"/><TextField fx:id="searchField" promptText="O que você está com vontade de comer?" HBox.hgrow="ALWAYS" styleClass="search-field"/><Label text="BUSCAR" styleClass="tiny-caption"/></HBox>
-        <HBox spacing="9"><ToggleButton fx:id="allCategory" text="Todos" onAction="#filterAll" styleClass="category-chip"/><ToggleButton fx:id="sweetsCategory" text="Doces da casa" onAction="#filterSweets" styleClass="category-chip"/><ToggleButton fx:id="drinksCategory" text="Bebidas" onAction="#filterDrinks" styleClass="category-chip"/><ToggleButton fx:id="snacksCategory" text="Lanches" onAction="#filterSnacks" styleClass="category-chip"/></HBox>
+        <HBox alignment="CENTER_LEFT" spacing="9"><Label text="PRODUTOS CADASTRADOS" styleClass="tiny-caption"/><Region HBox.hgrow="ALWAYS"/><Button text="＋ Cadastrar produto" onAction="#showProducts" styleClass="text-button"/></HBox>
         <TilePane fx:id="productGrid" hgap="16" vgap="18" prefColumns="3" tileAlignment="TOP_LEFT"/>
         <Label fx:id="emptyLabel" text="Nenhum produto encontrado. Tente outra busca." styleClass="muted-label" visible="false" managed="false"/>
         <HBox alignment="CENTER_LEFT" styleClass="bottom-note"><Label text="NUCITA LANCHES" styleClass="tiny-caption"/><Region HBox.hgrow="ALWAYS"/><Label text="Sabores que viram bons momentos." styleClass="muted-label"/></HBox>
@@ -35,16 +36,15 @@
     </BorderPane>
   </center>
   <right><VBox styleClass="order-panel" prefWidth="285" minWidth="285" spacing="18">
-    <HBox alignment="CENTER_LEFT"><Label text="Seu pedido" styleClass="order-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="countLabel" text="0" styleClass="count-bubble"/></HBox>
-    <HBox styleClass="table-box" alignment="CENTER_LEFT"><VBox spacing="5"><Label text="ATENDIMENTO NA MESA" styleClass="tiny-caption"/><Label fx:id="tableLabel" text="Mesa 04" styleClass="table-name"/></VBox><Region HBox.hgrow="ALWAYS"/><Button text="Trocar" onAction="#showTables" styleClass="text-button"/></HBox>
-    <Label text="SEUS FAVORITOS ESTÃO AQUI" styleClass="tiny-caption"/>
+    <HBox alignment="CENTER_LEFT"><Label fx:id="orderTitle" text="Seu pedido" styleClass="order-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="countLabel" text="0" styleClass="count-bubble"/></HBox>
+    <VBox styleClass="table-box" spacing="8"><Label text="ATENDIMENTO NA MESA" styleClass="tiny-caption"/><Label fx:id="tableLabel" text="Nenhum pedido aberto" styleClass="table-name" wrapText="true"/><Button text="Cadastrar / selecionar mesa" onAction="#showTables" styleClass="text-button"/></VBox>
+    <Label text="ITENS DO PEDIDO ABERTO" styleClass="tiny-caption"/>
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="cart-scroll"><VBox fx:id="cartItems" spacing="14"/></ScrollPane>
     <Label fx:id="statusLabel" text="Adicione algo gostoso ao seu pedido." wrapText="true" styleClass="status-message"/>
     <Separator/>
-    <HBox><Label text="Subtotal" styleClass="muted-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="subtotalLabel" text="R$ 0,00" styleClass="subtotal"/></HBox>
-    <HBox alignment="CENTER_LEFT"><Label text="Total do pedido" styleClass="total-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="totalLabel" text="R$ 0,00" styleClass="total-price"/></HBox>
-    <Button fx:id="checkoutButton" text="Confirmar pedido   →" styleClass="checkout-button" maxWidth="Infinity" onAction="#checkout"/>
-    <Label text="PRÉVIA • PEDIDOS DE DEMONSTRAÇÃO" styleClass="fine-print" wrapText="true"/>
+    <Label fx:id="nextTableLabel" text="Selecione uma mesa para criar um pedido." styleClass="status-message" wrapText="true"/>
+    <Button fx:id="newOrderButton" text="Novo pedido   →" styleClass="checkout-button" maxWidth="Infinity" onAction="#createOrder"/>
+    <Button text="Consultar pedidos" onAction="#showOrders" styleClass="text-button" maxWidth="Infinity"/>
+    <Label text="DADOS DESTA SESSÃO • AO FECHAR, OS CADASTROS E PEDIDOS SÃO APAGADOS." styleClass="fine-print" wrapText="true"/>
   </VBox></right>
 </BorderPane>
-

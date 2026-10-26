@@ -13,9 +13,9 @@ try {
     New-Item -ItemType Directory -Path $classesPath -Force | Out-Null
     $sources = Get-ChildItem -LiteralPath 'src/main/java' -Recurse -Filter '*.java' | Select-Object -ExpandProperty FullName
     & $javacCommand --module-path $modulePath --add-modules javafx.controls,javafx.fxml -encoding UTF-8 -d $classesPath $sources
-    if ($LASTEXITCODE -ne 0) { throw 'Não foi possível compilar a prévia.' }
+    if ($LASTEXITCODE -ne 0) { throw 'Não foi possível compilar o atendimento Nucita.' }
     & $javaCommand "-Djavafx.cachedir=$(Join-Path $PSScriptRoot 'build/javafx-cache')" --module-path $modulePath --add-modules javafx.controls,javafx.fxml -cp "$classesPath;src/main/resources" br.com.nucitalanches.preview.NucitaPreviewApp
-    if ($LASTEXITCODE -ne 0) { throw 'Não foi possível abrir a prévia.' }
+    if ($LASTEXITCODE -ne 0) { throw 'Não foi possível abrir o atendimento Nucita.' }
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red
     Read-Host 'Pressione Enter para fechar'

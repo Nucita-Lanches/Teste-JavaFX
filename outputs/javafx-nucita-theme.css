@@ -71,5 +71,10 @@
 .scroll-bar:vertical .thumb { -fx-background-color: #CDBEB4; -fx-background-radius: 4; }
 .scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-padding: 0; -fx-background-color: transparent; }
 .scroll-bar .increment-arrow, .scroll-bar .decrement-arrow { -fx-padding: 0; }
-
-
+.management-dialog { -fx-background-color: #F6F2EB; }
+.management-dialog .text-field, .management-dialog .text-area, .management-dialog .list-view { -fx-background-color: #FFFDFA; -fx-border-color: #E6DED4; -fx-border-radius: 6; -fx-background-radius: 6; }
+.management-dialog .text-field { -fx-padding: 10; }
+.management-dialog .list-cell { -fx-padding: 12; -fx-background-color: #FFFDFA; }
+.management-dialog .list-cell:filled:selected { -fx-background-color: #74223A; -fx-text-fill: #FFF5E5; }
+.form-feedback { -fx-text-fill: #873B4B; -fx-font-size: 12px; }
+.order-item { -fx-padding: 12; -fx-background-color: #F6F0E8; -fx-background-radius: 8; }

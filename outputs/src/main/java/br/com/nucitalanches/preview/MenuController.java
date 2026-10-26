@@ -1,142 +1,243 @@
 package br.com.nucitalanches.preview;
 
+import com.senai.nucitalanches.nucitalanches.application.Restaurante;
+import com.senai.nucitalanches.nucitalanches.domain.*;
+import com.senai.nucitalanches.nucitalanches.storage.BancoDeDados;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
+import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.function.Function;
 
-/** Interface independente: dados e pedidos locais, sem persistência. */
+/** Liga a interface às operações já implementadas no projeto Nucita Lanches. */
 public class MenuController {
     @FXML private TextField searchField;
     @FXML private TilePane productGrid;
     @FXML private VBox cartItems;
-    @FXML private ToggleButton allCategory, sweetsCategory, drinksCategory, snacksCategory;
-    @FXML private Label emptyLabel, countLabel, tableLabel, statusLabel, subtotalLabel, totalLabel;
-    @FXML private Button checkoutButton;
-    private final ToggleGroup categories = new ToggleGroup();
-    private final Map<Product, Integer> cart = new LinkedHashMap<>();
-    private final List<String> history = new ArrayList<>();
+    @FXML private Label emptyLabel, countLabel, tableLabel, statusLabel, orderTitle, nextTableLabel;
+    @FXML private Button newOrderButton;
+    private final Restaurante restaurante = new Restaurante();
     private final NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
-    private Image foods;
-    private Image kojima;
-    private Image lendaNucita;
-    private String category = "Todos";
-    private record Product(String name, String description, String category, int cents, int photo, String tag) { }
-    private final Product secretProduct = new Product("Hideo Kojima", "Pensando em ideias lendárias. Item raríssimo da Nucita.", "Easter egg", -1, -1, "1.000.000 AURA");
-    private final Product lendaProduct = new Product("A Lenda Nucita", "Uma aparição raríssima no cardápio. Só quem sabe, sabe.", "Easter egg", -2, -2, "SEGREDO");
-    private final List<Product> products = List.of(
-        new Product("Brownie da casa", "Chocolate intenso e creme de avelã.", "Doces", 800, 0, "MAIS PEDIDO"),
-        new Product("Milk-shake Nucita", "Chocolate, cremosidade e muita vontade.", "Bebidas", 1400, 1, "FAVORITO"),
-        new Product("Cookie recheado", "Crocante por fora. Avelã por dentro.", "Doces", 750, 2, "DA CASA"),
-        new Product("Smash da casa", "Pão macio, queijo e carne na chapa.", "Lanches", 2200, 3, "ESPECIAL")
-    );
+    private Mesa selectedMesa;
+    private Pedido activeOrder;
+    private Image logo;
 
     @FXML private void initialize() {
-        foods = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/foods.png")));
-        kojima = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/kojima.png")));
-        lendaNucita = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/lenda-nucita.jpg")));
-        for (ToggleButton button : List.of(allCategory, sweetsCategory, drinksCategory, snacksCategory)) button.setToggleGroup(categories);
-        allCategory.setSelected(true);
+        logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.png")));
         searchField.textProperty().addListener((obs, old, value) -> renderProducts());
-        // Sugestão inicial para explorar os controles; não é um pedido real.
-        cart.put(products.get(0), 1);
-        cart.put(products.get(1), 1);
         renderProducts();
-        renderCart();
-        statusLabel.setText("Sugestão inicial. Ajuste como preferir.");
+        renderOrder();
+        statusLabel.setText("Cadastre produtos e mesas para começar o atendimento.");
     }
-
     private Label label(String text, String style) {
-        Label label = new Label(text); label.getStyleClass().add(style); return label;
+        Label result = new Label(text);
+        result.getStyleClass().add(style);
+        result.setWrapText(true);
+        return result;
     }
-    private Region spacer() { Region r = new Region(); HBox.setHgrow(r, Priority.ALWAYS); return r; }
-    private String money(int cents) { return currency.format(cents / 100.0); }
-    private String normalize(String text) { return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT); }
-    private ImageView photo(Product product, int width, int height) {
-        if (product.photo < 0) {
-            ImageView portrait = new ImageView(product.photo == -2 ? lendaNucita : kojima); portrait.setFitWidth(width); portrait.setFitHeight(height); portrait.setPreserveRatio(false);
-            return portrait;
-        }
-        ImageView view = new ImageView(foods);
-        double w = foods.getWidth() / 2, h = foods.getHeight() / 2;
-        // Fit a centered landscape window inside each quadrant, without stretching.
-        double cropHeight = w * height / width;
-        view.setViewport(new Rectangle2D((product.photo % 2) * w, (product.photo / 2) * h + (h - cropHeight) / 2, w, cropHeight));
-        view.setFitWidth(width); view.setFitHeight(height);
-        Rectangle clip = new Rectangle(width, height); clip.setArcWidth(15); clip.setArcHeight(15); view.setClip(clip);
-        return view;
+    private Region spacer() {
+        Region region = new Region(); HBox.setHgrow(region, Priority.ALWAYS); return region;
+    }
+    private String money(double price) { return currency.format(price); }
+    private String mesaName(Mesa mesa) { return "Mesa " + mesa.getNumero(); }
+    private String normalize(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT);
     }
     private void renderProducts() {
         productGrid.getChildren().clear();
-        String query = normalize(searchField.getText());
-        List<Product> visible = new ArrayList<>(products);
-        if (query.contains("kojima")) visible.add(secretProduct);
-        boolean lendaQuery = isLendaSearch(query);
-        if (lendaQuery) visible.add(lendaProduct);
-        for (Product product : visible) {
-            if (product == secretProduct && !query.contains("kojima")) continue;
-            if (product == lendaProduct && !lendaQuery) continue;
-            if (product != secretProduct && !category.equals("Todos") && !category.equals(product.category)) continue;
-            if (product != lendaProduct && !normalize(product.name + " " + product.description).contains(query)) continue;
-            VBox card = new VBox(); card.setPrefWidth(188); card.setMaxWidth(188); card.getStyleClass().add("product-card");
-            StackPane artwork = new StackPane(photo(product, 170, 124));
-            Label tag = label(product.tag, "product-tag"); StackPane.setAlignment(tag, Pos.TOP_LEFT); StackPane.setMargin(tag, new Insets(8)); artwork.getChildren().add(tag);
-            Label name = label(product.name, "product-name");
-            Label description = label(product.description, "product-description"); description.setWrapText(true);
-            Button add = new Button("+"); add.getStyleClass().add("add-button"); add.setAccessibleText("Adicionar " + product.name); add.setOnAction(e -> add(product));
-            String displayPrice = product.cents == -1 ? "1.000.000 aura" : product.cents == -2 ? "todas as suas Nucitas" : money(product.cents);
-            HBox footer = new HBox(label(displayPrice, "product-price"), spacer(), add); footer.setAlignment(Pos.CENTER_LEFT);
-            VBox info = new VBox(name, description, footer); info.getStyleClass().add("product-body");
-            card.getChildren().addAll(artwork, info); productGrid.getChildren().add(card);
+        String query = normalize(searchField.getText().trim());
+        for (Produto produto : restaurante.listarProdutos()) {
+            if (!normalize(produto.getNome()).contains(query)) continue;
+            ImageView artwork = new ImageView(logo);
+            artwork.setFitWidth(150); artwork.setFitHeight(110); artwork.setPreserveRatio(true);
+            StackPane image = new StackPane(artwork); image.setMinHeight(124);
+            image.getStyleClass().add("product-photo");
+            Button add = new Button("+");
+            add.setId("addProduct-" + produto.getId());
+            add.getStyleClass().add("add-button");
+            add.setAccessibleText("Adicionar " + produto.getNome() + " ao pedido");
+            add.setDisable(activeOrder == null);
+            add.setTooltip(new Tooltip(activeOrder == null ? "Selecione uma mesa e crie um pedido primeiro." : "Adicionar ao pedido " + activeOrder.getNumeroPedido()));
+            add.setOnAction(event -> showAddItem(produto));
+            HBox footer = new HBox(label(money(produto.getPreco()), "product-price"), spacer(), add);
+            footer.setAlignment(Pos.CENTER_LEFT);
+            VBox body = new VBox(8, label(produto.getNome(), "product-name"), label("Produto #" + produto.getId(), "product-description"), footer);
+            body.getStyleClass().add("product-body");
+            VBox card = new VBox(image, body); card.setPrefWidth(188); card.setMaxWidth(188);
+            card.getStyleClass().add("product-card"); productGrid.getChildren().add(card);
         }
-        boolean empty = productGrid.getChildren().isEmpty(); emptyLabel.setVisible(empty); emptyLabel.setManaged(empty);
+        boolean empty = productGrid.getChildren().isEmpty();
+        emptyLabel.setText(restaurante.listarProdutos().isEmpty()
+                ? "Nenhum produto cadastrado. Use Produtos para cadastrar o primeiro item do cardápio."
+                : "Nenhum produto encontrado. Tente outra busca.");
+        emptyLabel.setVisible(empty); emptyLabel.setManaged(empty);
     }
-    private void add(Product p) { cart.merge(p, 1, Integer::sum); statusLabel.setText(p.name + " adicionado."); renderCart(); }
-    private void remove(Product p) { cart.computeIfPresent(p, (key, value) -> value == 1 ? null : value - 1); renderCart(); }
-    private void renderCart() {
-        cartItems.getChildren().clear(); int cents = 0, count = 0;
-        for (var entry : cart.entrySet()) {
-            Product p = entry.getKey(); int quantity = entry.getValue(); if (p.cents > 0) cents += p.cents * quantity; count += quantity;
-            Button minus = new Button("−"); minus.getStyleClass().add("quantity"); minus.setAccessibleText("Remover uma unidade de " + p.name); minus.setOnAction(e -> remove(p));
-            Button plus = new Button("+"); plus.getStyleClass().add("quantity"); plus.setOnAction(e -> add(p));
-            HBox controls = new HBox(6, minus, label(Integer.toString(quantity), "cart-price"), plus); controls.setAlignment(Pos.CENTER_LEFT);
-            VBox text = new VBox(6, label(p.name, "cart-item-name"), controls); HBox.setHgrow(text, Priority.ALWAYS);
-            HBox row = new HBox(9, photo(p, 44, 44), text); row.setAlignment(Pos.CENTER_LEFT);
-            String itemTotal = p.cents == -1 ? "1.000.000 aura" : p.cents == -2 ? "todas as suas Nucitas" : money(p.cents * quantity);
-            VBox item = new VBox(8, row, label(itemTotal, "cart-price")); cartItems.getChildren().add(item);
+    private void renderOrder() {
+        cartItems.getChildren().clear();
+        orderTitle.setText(activeOrder == null ? "Seu pedido" : "Pedido #" + activeOrder.getNumeroPedido());
+        tableLabel.setText(activeOrder == null ? "Nenhum pedido aberto" : mesaName(activeOrder.getMesa()));
+        nextTableLabel.setText(selectedMesa == null ? "Selecione uma mesa para criar um pedido." : "Próximo pedido: " + mesaName(selectedMesa));
+        newOrderButton.setDisable(selectedMesa == null);
+        long count = 0;
+        if (activeOrder != null) {
+            for (ItemPedido item : activeOrder.getItens()) {
+                count += item.getQuantidade();
+                VBox row = new VBox(7, label(item.getProduto().getNome(), "cart-item-name"),
+                        label("Quantidade: " + item.getQuantidade(), "cart-price"),
+                        label("Preço unitário: " + money(item.getProduto().getPreco()), "muted-label"));
+                row.getStyleClass().add("order-item"); cartItems.getChildren().add(row);
+            }
         }
-        if (count == 0) { Label empty = label("Seu pedido começa com uma boa escolha. Adicione um favorito!", "muted-label"); empty.setWrapText(true); cartItems.getChildren().add(empty); }
-        countLabel.setText(Integer.toString(count)); subtotalLabel.setText(money(cents)); totalLabel.setText(money(cents)); checkoutButton.setDisable(count == 0);
+        if (cartItems.getChildren().isEmpty()) cartItems.getChildren().add(label(activeOrder == null
+                ? "Selecione uma mesa e clique em Novo pedido."
+                : "Pedido aberto. Use + no cardápio para incluir um produto.", "muted-label"));
+        countLabel.setText(Long.toString(count));
     }
-    private void filter(String value, ToggleButton button) { category = value; button.setSelected(true); renderProducts(); }
-    private boolean isLendaSearch(String query) {
-        return query.contains("gordo") && query.contains("nucita") && query.contains("cardoso") && query.contains("custodio");
+    private <T> Dialog<T> dialog(String title) {
+        Dialog<T> dialog = new Dialog<>();
+        dialog.setTitle("Nucita Lanches • " + title);
+        dialog.initOwner(searchField.getScene().getWindow());
+        dialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/javafx-nucita-theme.css")).toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("management-dialog");
+        dialog.setResizable(true); return dialog;
     }
-    @FXML private void filterAll() { filter("Todos", allCategory); }
-    @FXML private void filterSweets() { filter("Doces", sweetsCategory); }
-    @FXML private void filterDrinks() { filter("Bebidas", drinksCategory); }
-    @FXML private void filterSnacks() { filter("Lanches", snacksCategory); }
-    @FXML private void showMenu() { searchField.clear(); filterAll(); }
-    @FXML private void showFavorites() { searchField.clear(); filterSweets(); }
+    private <T> void configureList(ListView<T> list, Function<T, String> display) {
+        list.setCellFactory(view -> new ListCell<>() {
+            @Override protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty); setText(empty || item == null ? null : display.apply(item));
+            }
+        });
+        list.setPrefHeight(200);
+    }
+    private VBox content(Node... nodes) {
+        VBox box = new VBox(12, nodes); box.setPadding(new Insets(8)); box.setPrefWidth(510); return box;
+    }
+    private void action(Label feedback, Runnable operation) {
+        try { operation.run(); }
+        catch (IllegalArgumentException exception) { feedback.setText(exception.getMessage()); }
+    }
+    private int integer(String value, String field) {
+        try { return Integer.parseInt(value.trim()); }
+        catch (NumberFormatException exception) { throw new IllegalArgumentException(field + ": informe um número inteiro válido."); }
+    }
+    @FXML private void showMenu() { searchField.clear(); renderProducts(); }
+
+    @FXML private void showProducts() {
+        Dialog<Void> dialog = dialog("Produtos");
+        dialog.getDialogPane().setId("productsDialog");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        ListView<Produto> list = new ListView<>(); list.setId("productsList");
+        configureList(list, produto -> "#" + produto.getId() + " • " + produto.getNome() + " • " + money(produto.getPreco()));
+        list.getItems().setAll(restaurante.listarProdutos()); list.setPlaceholder(new Label("Nenhum produto cadastrado."));
+        TextField name = new TextField(); name.setId("productName"); name.setPromptText("Nome do produto");
+        TextField price = new TextField(); price.setId("productPrice"); price.setPromptText("Ex.: 12,50");
+        Label feedback = label("", "form-feedback"); feedback.setId("productFeedback");
+        Button save = new Button("Cadastrar produto"); save.setId("saveProduct"); save.getStyleClass().add("hero-button");
+        save.setOnAction(event -> action(feedback, () -> {
+            String value = price.getText().trim();
+            if (!value.matches("[0-9]+([.,][0-9]{1,2})?")) throw new IllegalArgumentException("Informe o preço sem separador de milhar, com até duas casas decimais. Ex.: 12,50.");
+            Produto produto = new Produto(name.getText(), new BigDecimal(value.replace(',', '.')).doubleValue());
+            restaurante.cadastroProduto(produto); list.getItems().setAll(restaurante.listarProdutos());
+            name.clear(); price.clear(); feedback.setText("Produto cadastrado: " + produto.getNome() + ".");
+            statusLabel.setText("Produto cadastrado no cardápio."); renderProducts(); name.requestFocus();
+        }));
+        dialog.getDialogPane().setContent(content(label("Produtos cadastrados", "section-title"), list,
+                label("Novo produto", "product-name"), label("Nome", "muted-label"), name,
+                label("Preço (R$)", "muted-label"), price, feedback, save));
+        dialog.showAndWait();
+    }
     @FXML private void showTables() {
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(tableLabel.getText(), List.of("Mesa 01", "Mesa 02", "Mesa 03", "Mesa 04", "Mesa 05", "Mesa 06"));
-        dialog.setTitle("Nucita • Mesas"); dialog.setHeaderText("Onde vamos servir seu pedido?"); dialog.setContentText("Escolha uma mesa:");
-        dialog.showAndWait().ifPresent(tableLabel::setText);
+        Dialog<Mesa> dialog = dialog("Mesas"); dialog.getDialogPane().setId("tablesDialog");
+        ButtonType select = new ButtonType("Usar no próximo pedido", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(select, ButtonType.CANCEL);
+        ListView<Mesa> list = new ListView<>(); list.setId("tablesList"); configureList(list, this::mesaName);
+        list.getItems().setAll(restaurante.listarMesas()); list.setPlaceholder(new Label("Nenhuma mesa cadastrada."));
+        if (selectedMesa != null) list.getSelectionModel().select(selectedMesa);
+        TextField number = new TextField(); number.setId("tableNumber"); number.setPromptText("Número da mesa");
+        Label feedback = label("", "form-feedback"); feedback.setId("tableFeedback");
+        Button save = new Button("Cadastrar mesa"); save.setId("saveTable"); save.getStyleClass().add("hero-button");
+        save.setOnAction(event -> action(feedback, () -> {
+            Mesa mesa = new Mesa(integer(number.getText(), "Mesa"));
+            if (!restaurante.cadastrarMesa(mesa)) throw new IllegalArgumentException("O número deve ser positivo e não pode pertencer a uma mesa já cadastrada.");
+            list.getItems().setAll(restaurante.listarMesas()); list.getSelectionModel().select(mesa);
+            feedback.setText(mesaName(mesa) + " cadastrada. Selecione Usar no próximo pedido para continuar."); number.clear();
+        }));
+        Button find = new Button("Consultar número"); find.setId("findTable");
+        find.setOnAction(event -> action(feedback, () -> {
+            Mesa mesa = restaurante.consultarMesaPorNumero(integer(number.getText(), "Mesa"));
+            if (mesa == null) throw new IllegalArgumentException("Mesa não encontrada.");
+            list.getSelectionModel().select(mesa); list.scrollTo(mesa); feedback.setText(mesaName(mesa) + " encontrada.");
+        }));
+        Button selectButton = (Button) dialog.getDialogPane().lookupButton(select); selectButton.setId("selectTable");
+        selectButton.disableProperty().bind(list.getSelectionModel().selectedItemProperty().isNull());
+        dialog.setResultConverter(button -> button == select ? list.getSelectionModel().getSelectedItem() : null);
+        dialog.getDialogPane().setContent(content(label("Mesas cadastradas", "section-title"), list,
+                label("Cadastrar ou consultar uma mesa", "product-name"), number, new HBox(10, save, find), feedback));
+        dialog.showAndWait().ifPresent(mesa -> {
+            selectedMesa = mesa; renderOrder(); statusLabel.setText(mesaName(mesa) + " selecionada para o próximo pedido.");
+        });
     }
-    @FXML private void showOrders() { showMessage("Pedidos desta prévia", history.isEmpty() ? "Você ainda não confirmou nenhum pedido nesta sessão." : String.join("\n\n", history)); }
-    @FXML private void checkout() {
-        if (cart.isEmpty()) return;
-        String receipt = tableLabel.getText() + " • " + countLabel.getText() + " itens • " + totalLabel.getText();
-        history.add(receipt); cart.clear(); renderCart(); statusLabel.setText("Pedido registrado nesta prévia.");
-        showMessage("Tudo certo!", receipt + "\n\nDemonstração local. Nenhum pedido foi enviado ao restaurante.");
+    @FXML private void createOrder() {
+        if (selectedMesa == null) return;
+        try {
+            activeOrder = restaurante.criarPedido(selectedMesa.getNumero()); renderOrder(); renderProducts();
+            statusLabel.setText("Pedido #" + activeOrder.getNumeroPedido() + " aberto. Adicione produtos pelo cardápio.");
+        } catch (IllegalArgumentException exception) { statusLabel.setText(exception.getMessage()); }
     }
-    private void showMessage(String title, String text) { Alert dialog = new Alert(Alert.AlertType.INFORMATION); dialog.setTitle("Nucita Lanches"); dialog.setHeaderText(title); dialog.setContentText(text); dialog.showAndWait(); }
+    private void showAddItem(Produto produto) {
+        if (activeOrder == null) return;
+        Dialog<Void> dialog = dialog("Adicionar item"); dialog.getDialogPane().setId("addItemDialog");
+        ButtonType add = new ButtonType("Adicionar ao pedido", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(add, ButtonType.CANCEL);
+        TextField quantity = new TextField("1"); quantity.setId("itemQuantity");
+        Label feedback = label("", "form-feedback"); feedback.setId("itemFeedback");
+        dialog.getDialogPane().setContent(content(label(produto.getNome(), "section-title"),
+                label("Preço unitário: " + money(produto.getPreco()), "product-price"),
+                label("Pedido #" + activeOrder.getNumeroPedido() + " • " + mesaName(activeOrder.getMesa()), "muted-label"),
+                label("Quantidade", "product-name"), quantity, feedback));
+        Button save = (Button) dialog.getDialogPane().lookupButton(add); save.setId("saveItem");
+        save.addEventFilter(ActionEvent.ACTION, event -> {
+            try {
+                restaurante.adicionarItemAoPedido(activeOrder.getNumeroPedido(), produto, integer(quantity.getText(), "Quantidade"));
+                renderOrder(); statusLabel.setText(produto.getNome() + " adicionado ao pedido #" + activeOrder.getNumeroPedido() + ".");
+            } catch (IllegalArgumentException exception) { feedback.setText(exception.getMessage()); event.consume(); }
+        });
+        dialog.showAndWait();
+    }
+    @FXML private void showOrders() {
+        Dialog<Pedido> dialog = dialog("Pedidos"); dialog.getDialogPane().setId("ordersDialog");
+        ButtonType select = new ButtonType("Continuar pedido", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(select, ButtonType.CANCEL);
+        ListView<Pedido> list = new ListView<>(); list.setId("ordersList");
+        configureList(list, pedido -> "Pedido #" + pedido.getNumeroPedido() + " • " + mesaName(pedido.getMesa()) + " • " + pedido.getStatus());
+        list.getItems().setAll(BancoDeDados.getInstancia().listarPedidos()); list.setPlaceholder(new Label("Nenhum pedido criado nesta sessão."));
+        TextArea details = new TextArea(); details.setId("orderDetails"); details.setEditable(false); details.setWrapText(true); details.setPrefRowCount(7);
+        list.getSelectionModel().selectedItemProperty().addListener((obs, old, pedido) -> {
+            if (pedido == null) { details.clear(); return; }
+            StringBuilder text = new StringBuilder("Pedido #" + pedido.getNumeroPedido() + " • " + mesaName(pedido.getMesa()) + "\nStatus: " + pedido.getStatus() + "\n\n");
+            if (pedido.getItens().isEmpty()) text.append("Nenhum item adicionado.");
+            for (ItemPedido item : pedido.getItens()) text.append(item.getQuantidade()).append(" × ").append(item.getProduto().getNome())
+                    .append(" • preço unitário: ").append(money(item.getProduto().getPreco())).append('\n');
+            details.setText(text.toString());
+        });
+        Button selectButton = (Button) dialog.getDialogPane().lookupButton(select); selectButton.setId("selectOrder");
+        selectButton.disableProperty().bind(list.getSelectionModel().selectedItemProperty().isNull());
+        dialog.setResultConverter(button -> button == select ? list.getSelectionModel().getSelectedItem() : null);
+        dialog.getDialogPane().setContent(content(label("Pedidos desta sessão", "section-title"), list, details));
+        if (activeOrder != null) list.getSelectionModel().select(activeOrder);
+        dialog.showAndWait().ifPresent(pedido -> {
+            activeOrder = pedido; selectedMesa = pedido.getMesa(); renderOrder(); renderProducts();
+            statusLabel.setText("Pedido #" + pedido.getNumeroPedido() + " selecionado para incluir itens.");
+        });
+    }
 }
