@@ -35,7 +35,7 @@ Uma mesa pode ter vários pedidos. Selecionar outra mesa prepara o próximo pedi
 
 ## Estado dos dados
 
-O armazenamento original é um singleton em memória: produtos, mesas e pedidos são apagados quando o programa fecha. A aplicação inicia sem cadastros de demonstração. As imagens dos produtos usam a marca como ilustração, pois o modelo original contém apenas nome, preço e identificador.
+O armazenamento original é um singleton em memória: produtos, mesas e pedidos são apagados quando o programa fecha. A aplicação inicia sem cadastros de demonstração. Os cartões usam as iniciais dos produtos como identidade visual, pois o modelo original contém apenas nome, preço e identificador.
 
 O repositório ainda não implementa total/subtotal, remoção de itens ou finalização de pedidos. A interface apresenta preços unitários, quantidades e o status original, sem oferecer essas operações pendentes. Os controles antigos de confirmação e remoção da prévia foram substituídos pelo fluxo implementado.
 
@@ -61,3 +61,14 @@ Para repetir com Maven configurado: `mvn test`. Pelo IntelliJ, execute o objetiv
 ## Direção visual
 
 Foi mantida a identidade visual local: carvão #000000, vinho #74223A, creme #F6F2EB e avelã #D8AB70, com Segoe UI na interface e Georgia no destaque. A logo e as imagens da prévia anterior continuam em `src/main/resources/images`.
+
+
+## Refinamento visual — 26/10/2026
+
+A identidade Nucita foi preservada em um layout refinado: preto e vinho no menu e no destaque da marca, creme no fundo e tons de avelã nos detalhes. A hierarquia dos textos, os contrastes, os espaçamentos e as ações foram reorganizados.
+
+Os cartões têm monogramas dos produtos, preço unitário e botão de inclusão. A grade ajusta a quantidade e a largura das colunas ao espaço disponível. O painel de pedidos mostra mesa, estado, itens, quantidades e ações com maior clareza.
+
+Os formulários seguem o mesmo tema, com duas colunas para cadastro/listagem, ícones vetoriais locais, seleção destacada, foco de teclado e mensagens de sucesso/erro diferenciadas. Os estados sem produtos ou sem pedido orientam o próximo passo.
+
+As funções de negócio continuam ligadas às mesmas classes. Os 14 testes passaram após a alteração visual; o teste da interface também confere a grade com seis produtos e a janela de 1220 × 730. As capturas exibem dados de teste, que não são cadastrados ao iniciar o aplicativo.

@@ -1,6 +1,7 @@
 package br.com.nucitalanches.preview;
 
 import com.senai.nucitalanches.nucitalanches.domain.*;
+import com.senai.nucitalanches.nucitalanches.application.Restaurante;
 import com.senai.nucitalanches.nucitalanches.storage.BancoDeDados;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.TilePane;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -49,12 +51,13 @@ class MenuControllerIntegrationTest {
         int productsBefore = banco.listarProdutos().size();
         int tablesBefore = banco.listarMesas().size();
         int ordersBefore = banco.listarPedidos().size();
+        snapshot(root, "inicio");
         assertTrue(button(root, "newOrderButton").isDisabled());
         modal("productsNav", "productsDialog", pane -> {
             text(pane, "productPrice").setText("12,50");
             button(pane, "saveProduct").fire();
             assertEquals(productsBefore, banco.listarProdutos().size(), "Nome vazio deve ser recusado");
-            text(pane, "productName").setText("  Pão de queijo UI  ");
+            text(pane, "productName").setText("  Pão de queijo  ");
             for (String invalid : List.of("abc", "-2", "1.000", "NaN", "1,2,3")) {
                 text(pane, "productPrice").setText(invalid);
                 button(pane, "saveProduct").fire();
@@ -66,7 +69,7 @@ class MenuControllerIntegrationTest {
             assertEquals(productsBefore + 1, list(pane, "productsList").getItems().size());
             snapshot(pane, "produtos");
         });
-        Produto product = banco.listarProdutos().stream().filter(p -> p.getNome().equals("Pão de queijo UI")).findFirst().orElseThrow();
+        Produto product = banco.listarProdutos().stream().filter(p -> p.getNome().equals("Pão de queijo")).findFirst().orElseThrow();
         assertEquals(12.5, product.getPreco());
         assertTrue(button(root, "addProduct-" + product.getId()).isDisabled());
         text(root, "searchField").setText("pao");
@@ -80,14 +83,14 @@ class MenuControllerIntegrationTest {
                 text(pane, "tableNumber").setText(invalid); button(pane, "saveTable").fire();
                 assertEquals(tablesBefore, banco.listarMesas().size());
             }
-            text(pane, "tableNumber").setText("40401"); button(pane, "saveTable").fire();
+            text(pane, "tableNumber").setText("4"); button(pane, "saveTable").fire();
             assertEquals(tablesBefore + 1, banco.listarMesas().size());
-            text(pane, "tableNumber").setText("40401"); button(pane, "saveTable").fire();
+            text(pane, "tableNumber").setText("4"); button(pane, "saveTable").fire();
             assertEquals(tablesBefore + 1, banco.listarMesas().size(), "Mesa duplicada deve ser recusada");
-            text(pane, "tableNumber").setText("40402"); button(pane, "saveTable").fire();
-            text(pane, "tableNumber").setText("40401"); button(pane, "findTable").fire();
-            assertSame(banco.buscarMesaPorNumero(40401), list(pane, "tablesList").getSelectionModel().getSelectedItem());
-            text(pane, "tableNumber").setText("40403"); button(pane, "findTable").fire();
+            text(pane, "tableNumber").setText("5"); button(pane, "saveTable").fire();
+            text(pane, "tableNumber").setText("4"); button(pane, "findTable").fire();
+            assertSame(banco.buscarMesaPorNumero(4), list(pane, "tablesList").getSelectionModel().getSelectedItem());
+            text(pane, "tableNumber").setText("6"); button(pane, "findTable").fire();
             assertEquals("Mesa não encontrada.", ((Label) pane.lookup("#tableFeedback")).getText());
             snapshot(pane, "mesas");
             button(pane, "selectTable").fire();
@@ -95,7 +98,7 @@ class MenuControllerIntegrationTest {
         assertFalse(button(root, "newOrderButton").isDisabled());
         button(root, "newOrderButton").fire();
         Pedido first = banco.listarPedidos().stream().reduce((a, b) -> b).orElseThrow();
-        assertEquals(40401, first.getMesa().getNumero());
+        assertEquals(4, first.getMesa().getNumero());
         assertEquals(StatusPedido.ABERTO, first.getStatus());
         modal("addProduct-" + product.getId(), "addItemDialog", pane -> {
             for (String invalid : List.of("0", "-3", "abc", "1,5", "2147483648")) {
@@ -108,17 +111,17 @@ class MenuControllerIntegrationTest {
         assertSame(product, first.getItens().get(0).getProduto());
         assertEquals("2", ((Label) root.lookup("#countLabel")).getText());
         modal("tablesNav", "tablesDialog", pane -> {
-            text(pane, "tableNumber").setText("40402"); button(pane, "findTable").fire(); button(pane, "selectTable").fire();
+            text(pane, "tableNumber").setText("5"); button(pane, "findTable").fire(); button(pane, "selectTable").fire();
         });
-        assertEquals("Mesa 40401", ((Label) root.lookup("#tableLabel")).getText(), "Escolher outra mesa não deve mover o pedido atual");
+        assertEquals("Mesa 4", ((Label) root.lookup("#tableLabel")).getText(), "Escolher outra mesa não deve mover o pedido atual");
         button(root, "newOrderButton").fire();
         Pedido second = banco.listarPedidos().stream().reduce((a, b) -> b).orElseThrow();
-        assertEquals(40402, second.getMesa().getNumero());
+        assertEquals(5, second.getMesa().getNumero());
         assertTrue(second.getItens().isEmpty());
         modal("ordersNav", "ordersDialog", pane -> {
             @SuppressWarnings("unchecked") ListView<Pedido> list = (ListView<Pedido>) (ListView<?>) list(pane, "ordersList");
             list.getSelectionModel().select(first);
-            assertTrue(((TextArea) pane.lookup("#orderDetails")).getText().contains("2 × Pão de queijo UI"));
+            assertTrue(((TextArea) pane.lookup("#orderDetails")).getText().contains("2 × Pão de queijo"));
             snapshot(pane, "pedidos"); button(pane, "selectOrder").fire();
         });
         modal("addProduct-" + product.getId(), "addItemDialog", pane -> button(pane, "saveItem").fire());
@@ -133,12 +136,36 @@ class MenuControllerIntegrationTest {
             @SuppressWarnings("unchecked") ListView<Pedido> list = (ListView<Pedido>) (ListView<?>) list(pane, "ordersList");
             list.getSelectionModel().select(first); button(pane, "selectOrder").fire();
         });
-        snapshot(root, "atendimento"); stage.close();
+        snapshot(root, "atendimento");
+        Restaurante restaurante = new Restaurante();
+        restaurante.cadastroProduto(new Produto("Brownie da casa", 8.0));
+        restaurante.cadastroProduto(new Produto("Milk-shake Nucita", 14.0));
+        restaurante.cadastroProduto(new Produto("Cookie recheado", 7.5));
+        restaurante.cadastroProduto(new Produto("Smash da casa", 22.0));
+        restaurante.cadastroProduto(new Produto("Um produto com nome bem longo para conferir a leitura no cardápio", 18.9));
+        button(root, "menuNav").fire();
+        verifyCards("cardapio-completo");
+        stage.getScene().setRoot(new javafx.scene.Group());
+        stage.setScene(new Scene(root, 1220, 730)); stage.sizeToScene();
+        verifyCards("janela-compacta");
+        stage.close();
     }
 
     private Button button(Node owner, String id) { return (Button) owner.lookup("#" + id); }
     private TextField text(Node owner, String id) { return (TextField) owner.lookup("#" + id); }
     private ListView<?> list(Node owner, String id) { return (ListView<?>) owner.lookup("#" + id); }
+
+    private void verifyCards(String name) {
+        snapshot(root, name);
+        TilePane grid = (TilePane) root.lookup("#productGrid");
+        assertEquals(6, grid.getChildren().size());
+        for (Node card : grid.getChildren()) {
+            assertTrue(card.getBoundsInParent().getMaxX() <= grid.getWidth() + 1, "Cartão deve caber na largura do cardápio");
+            assertTrue(card.getBoundsInParent().getWidth() >= 210, "Cartão deve manter largura legível");
+            Button add = (Button) card.lookup(".add-button");
+            assertTrue(add.getBoundsInParent().getMaxX() <= add.getParent().getLayoutBounds().getWidth() + 1, "A ação do cartão deve caber no rodapé");
+        }
+    }
 
     private void modal(String opener, String paneId, Consumer<DialogPane> verify) {
         AtomicReference<Throwable> failure = new AtomicReference<>();

@@ -1,80 +1,162 @@
-/* Nucita Lanches — vinho, carvão, baunilha e avelã. */
-.root { -fx-font-family: "Segoe UI"; -fx-font-size: 13px; -fx-background-color: #F6F2EB; -fx-text-fill: #29242A; -fx-focus-color: #982D48; -fx-faint-focus-color: transparent; }
-.label { -fx-text-fill: #29242A; }
-.button, .toggle-button { -fx-cursor: hand; }
-.sidebar { -fx-background-color: #000000; -fx-padding: 20 18; }
-.brand-caption { -fx-font-size: 9px; -fx-text-fill: #CFBFA9; -fx-padding: 0 0 16 2; -fx-font-weight: bold; }
-.side-caption { -fx-font-size: 10px; -fx-text-fill: #8F8585; -fx-padding: 20 0 8 9; -fx-font-weight: bold; }
-.nav-button { -fx-background-color: transparent; -fx-text-fill: #BDB5B4; -fx-padding: 14 13; -fx-background-radius: 10; -fx-alignment: center-left; -fx-font-weight: bold; }
-.nav-button:hover { -fx-background-color: #292124; -fx-text-fill: #FFF4E4; }
-.nav-active { -fx-background-color: #75223B; -fx-text-fill: #FFF7EA; }
-.side-note { -fx-background-color: #211A1B; -fx-border-color: #3E2A30; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 16 13; }
-.note-title { -fx-text-fill: #EDD5B6; -fx-font-family: "Georgia"; -fx-font-size: 15px; }
-.note-copy { -fx-text-fill: #A89A98; -fx-font-size: 11px; -fx-line-spacing: 3; }
-.profile { -fx-padding: 18 0 0; }
-.avatar { -fx-background-color: #74233B; -fx-text-fill: #F6DEC1; -fx-padding: 9 13; -fx-background-radius: 30; -fx-font-weight: bold; }
-.profile-name { -fx-text-fill: #E8DDD3; -fx-font-size: 11px; -fx-font-weight: bold; }
-.topbar { -fx-padding: 26 28 22; }
-.eyebrow { -fx-text-fill: #996C65; -fx-font-size: 10px; -fx-font-weight: bold; }
-.page-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #33252A; }
-.open-status { -fx-background-color: #E6EADD; -fx-background-radius: 20; -fx-text-fill: #536843; -fx-padding: 8 11; -fx-font-size: 10px; -fx-font-weight: bold; }
+/* Nucita: carvão, vinho, creme e avelã. Componentes da aplicação desktop. */
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 13px;
+    -fx-background-color: #F7F3ED;
+    -fx-text-fill: #30282A;
+    -fx-focus-color: #8F304D;
+    -fx-faint-focus-color: transparent;
+    -fx-accent: #7D2843;
+}
+.label { -fx-text-fill: #30282A; }
+.button { -fx-cursor: hand; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-insets: 0; }
+.button:disabled { -fx-opacity: 0.42; }
+.button:focused { -fx-effect: dropshadow(gaussian, rgba(148,63,84,0.28), 8, 0.15, 0, 0); }
+.tooltip { -fx-background-color: #34262B; -fx-text-fill: #FFF8EE; -fx-font-size: 12px; -fx-padding: 10 13; -fx-background-radius: 8; }
+.sidebar { -fx-background-color: linear-gradient(to bottom, #111010, #1A1316); -fx-padding: 24 17 22; -fx-border-color: #282023; -fx-border-width: 0 1 0 0; }
+.brand-block { -fx-padding: 0 0 22; }
+.brand-caption { -fx-font-size: 8px; -fx-text-fill: #C9B5A0; -fx-font-weight: bold; }
+.side-caption { -fx-font-size: 9px; -fx-text-fill: #A18D8C; -fx-padding: 23 13 12; -fx-font-weight: bold; }
+.nav-button { -fx-background-color: transparent; -fx-text-fill: #BEB1AF; -fx-padding: 15 16; -fx-background-radius: 10; -fx-alignment: center-left; -fx-font-size: 13px; -fx-font-weight: normal; }
+.nav-button .ui-icon { -fx-stroke: #A99696; }
+.nav-button:hover { -fx-background-color: #2B2025; -fx-text-fill: #FFF4E4; }
+.nav-active { -fx-background-color: linear-gradient(to right, #79243F, #672039); -fx-text-fill: #FFF4E4; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 10, 0, 0, 3); }
+.nav-active .ui-icon { -fx-stroke: #F5DFD1; }
+.side-note { -fx-background-color: #261C20; -fx-border-color: #403036; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 18 14; }
+.note-eyebrow { -fx-font-size: 8px; -fx-text-fill: #BFA17F; -fx-font-weight: bold; }
+.note-title { -fx-text-fill: #F5E1C4; -fx-font-family: "Georgia"; -fx-font-size: 19px; }
+.note-copy { -fx-text-fill: #B9A6A2; -fx-font-size: 11px; -fx-line-spacing: 3; }
+.profile { -fx-padding: 22 2 0; }
+.avatar { -fx-background-color: #6D263D; -fx-text-fill: #F4DDBD; -fx-padding: 9 13; -fx-background-radius: 12; -fx-font-family: "Georgia"; -fx-font-size: 17px; }
+.profile-name { -fx-text-fill: #EDE1D5; -fx-font-size: 12px; -fx-font-weight: bold; }
+.profile-caption { -fx-text-fill: #A18D8C; -fx-font-size: 10px; }
+.topbar { -fx-padding: 28 30 25; }
+.eyebrow { -fx-text-fill: #896A65; -fx-font-size: 9px; -fx-font-weight: bold; }
+.page-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #35282D; }
+.open-status { -fx-background-color: #E9EDDF; -fx-background-radius: 20; -fx-padding: 9 12; }
+.open-status .label { -fx-text-fill: #526349; -fx-font-size: 10px; }
+.status-dot { -fx-fill: #748B5B; }
 .menu-scroll, .menu-scroll > .viewport { -fx-background-color: transparent; }
 .menu-scroll { -fx-padding: 0; -fx-background-insets: 0; }
-.menu-content { -fx-padding: 0 28 25; }
-.hero { -fx-background-color: #000000; -fx-background-radius: 19; -fx-padding: 22 21 22 28; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(55,19,28,0.13), 18, 0, 0, 6); }
-.hero-eyebrow { -fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #D8AB70; }
-.hero-title { -fx-font-family: "Georgia"; -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #FBF0DF; -fx-padding: -6 0; }
-.hero-copy { -fx-text-fill: #BDAFAA; -fx-font-size: 11px; -fx-max-width: 285; }
-.hero-button { -fx-background-color: #81253F; -fx-background-radius: 8; -fx-text-fill: #FFF5E7; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 11 15; }
-.hero-button:hover { -fx-background-color: #A13654; }
-.section-title { -fx-font-size: 19px; -fx-text-fill: #38282B; -fx-font-weight: bold; }
-.muted-label { -fx-font-size: 11px; -fx-text-fill: #8D7E7B; }
-.tiny-caption { -fx-font-size: 9px; -fx-text-fill: #A18D83; -fx-font-weight: bold; }
-.search-box { -fx-background-color: #FFFDFA; -fx-background-radius: 11; -fx-border-color: #E6DED4; -fx-border-radius: 11; -fx-padding: 4 15; }
-.search-icon { -fx-font-size: 24px; -fx-text-fill: #925C68; }
-.search-field { -fx-background-color: transparent; -fx-padding: 10 0; -fx-prompt-text-fill: #A3978A; -fx-font-size: 12px; }
-.category-chip { -fx-background-color: #EDE6DC; -fx-background-radius: 20; -fx-text-fill: #7B6B64; -fx-padding: 9 17; -fx-font-size: 11px; -fx-font-weight: bold; }
-.category-chip:hover { -fx-background-color: #E4D7CC; }
-.category-chip:selected { -fx-background-color: #74223A; -fx-text-fill: #FFF5E5; -fx-effect: dropshadow(gaussian, rgba(91,29,46,0.12), 7, 0, 0, 3); }
-.product-card { -fx-background-color: #FFFDFA; -fx-background-radius: 13; -fx-border-radius: 13; -fx-border-color: #E8DED3; -fx-padding: 8; -fx-spacing: 12; }
-.product-card:hover { -fx-border-color: #C29184; -fx-effect: dropshadow(gaussian, rgba(80,41,38,0.12), 15, 0, 0, 5); }
-.product-photo { -fx-background-color: #F1E9DE; -fx-background-radius: 9; }
-.product-tag { -fx-background-color: #FFFAF0; -fx-background-radius: 5; -fx-padding: 4 7; -fx-font-size: 8px; -fx-text-fill: #79263F; -fx-font-weight: bold; }
-.product-name { -fx-font-size: 13px; -fx-text-fill: #36282B; -fx-font-weight: bold; }
-.product-description { -fx-font-size: 10px; -fx-text-fill: #95857B; -fx-min-height: 30; }
-.product-price { -fx-font-size: 16px; -fx-text-fill: #762139; -fx-font-weight: bold; }
-.product-body { -fx-padding: 0 4 5; -fx-spacing: 7; }
-.add-button { -fx-background-color: #74223A; -fx-background-radius: 9; -fx-font-size: 19px; -fx-text-fill: #FFF3E3; -fx-padding: 1 11; }
-.add-button:hover { -fx-background-color: #A03450; }
-.bottom-note { -fx-padding: 8 0; }
-.order-panel { -fx-background-color: #FFFDFA; -fx-padding: 29 20 23; -fx-border-color: #E5DCD2; -fx-border-width: 0 0 0 1; }
-.order-title { -fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #38252B; }
-.count-bubble { -fx-background-color: #F0E2E2; -fx-text-fill: #802C41; -fx-background-radius: 20; -fx-padding: 5 10; -fx-font-weight: bold; }
-.table-box { -fx-background-color: #F6F0E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 14; }
-.table-name { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4E3034; }
-.text-button { -fx-background-color: transparent; -fx-text-fill: #8D354E; -fx-font-weight: bold; -fx-font-size: 10px; }
+.menu-content { -fx-padding: 0 30 24; }
+.hero { -fx-background-color: linear-gradient(to right, #1C1318, #2D1821); -fx-background-radius: 18; -fx-border-radius: 18; -fx-border-color: #412730; -fx-padding: 25 25 25 28; -fx-effect: dropshadow(gaussian, rgba(52,24,31,0.12), 18, 0, 0, 6); }
+.hero-eyebrow { -fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #D5AD7B; }
+.hero-title { -fx-font-family: "Georgia"; -fx-font-size: 37px; -fx-text-fill: #FFF3DE; -fx-font-weight: bold; }
+.hero-title-accent { -fx-text-fill: #DEB890; }
+.hero-copy { -fx-text-fill: #CDB9B1; -fx-font-size: 11px; }
+.hero-button { -fx-background-color: #8C304D; -fx-background-radius: 8; -fx-text-fill: #FFF6E8; -fx-padding: 11 17; -fx-font-size: 11px; }
+.hero-button:hover { -fx-background-color: #A34060; }
+.hero-button:pressed { -fx-background-color: #70243E; }
+.hero-orbit { -fx-fill: #25191E; -fx-stroke: rgba(217,175,126,0.20); -fx-stroke-width: 1; }
+.hero-orbit-inner { -fx-fill: transparent; -fx-stroke: rgba(217,175,126,0.10); -fx-stroke-width: 1; }
+.section-title { -fx-font-size: 19px; -fx-text-fill: #35282C; -fx-font-weight: bold; }
+.muted-label { -fx-font-size: 12px; -fx-text-fill: #7C6D65; }
+.tiny-caption { -fx-font-size: 9px; -fx-text-fill: #8E776B; -fx-font-weight: bold; }
+.secondary-button { -fx-background-color: #FFFDF9; -fx-border-color: #DED1C7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #753047; -fx-padding: 11 14; -fx-font-size: 11px; }
+.secondary-button:hover { -fx-background-color: #F2E8E1; -fx-border-color: #B88B8B; }
+.secondary-button:pressed { -fx-background-color: #EBDDDB; }
+.search-box { -fx-background-color: #FFFDF9; -fx-background-radius: 10; -fx-border-color: #DED4CB; -fx-border-radius: 10; -fx-padding: 3 15; -fx-min-height: 48; }
+.search-box:focused-within { -fx-border-color: #9A5566; }
+.search-icon { -fx-fill: transparent; -fx-stroke: #9D6A72; -fx-stroke-width: 1.6; -fx-stroke-line-cap: round; }
+.search-field { -fx-background-color: transparent; -fx-padding: 12 0; -fx-prompt-text-fill: #9D8C82; -fx-font-size: 12px; }
+.search-field:focused { -fx-background-color: transparent; -fx-effect: none; }
+.search-caption { -fx-font-size: 8px; -fx-text-fill: #9D8C82; -fx-font-weight: bold; }
+.catalog-hint { -fx-text-fill: #8D756C; -fx-font-size: 10px; }
+.product-card { -fx-background-color: #FFFDF9; -fx-background-radius: 13; -fx-border-radius: 13; -fx-border-color: #E6DBD1; -fx-padding: 9; -fx-spacing: 0; }
+.product-card:hover { -fx-border-color: #B9938C; -fx-effect: dropshadow(gaussian, rgba(70,39,37,0.10), 17, 0, 0, 5); }
+.product-art { -fx-background-color: linear-gradient(to bottom right, #EEE2D4, #F5ECE1); -fx-background-radius: 8; -fx-min-height: 140; }
+.product-art-dark { -fx-background-color: linear-gradient(to bottom right, #39232D, #4C2B36); }
+.product-art-rose { -fx-background-color: linear-gradient(to bottom right, #EBD8D4, #F3E7DF); }
+.product-monogram { -fx-font-family: "Georgia"; -fx-font-size: 42px; -fx-text-fill: #81533E; }
+.product-art-dark .product-monogram { -fx-text-fill: #E2BD95; }
+.product-art-rose .product-monogram { -fx-text-fill: #8C3D53; }
+.product-art-ring { -fx-fill: transparent; -fx-stroke: rgba(147,102,67,0.22); -fx-stroke-width: 1; }
+.product-art-dark .product-art-ring { -fx-stroke: rgba(226,189,149,0.23); }
+.product-art-caption { -fx-font-size: 8px; -fx-text-fill: #9A7D65; -fx-font-weight: bold; }
+.product-art-dark .product-art-caption { -fx-text-fill: #C6A087; }
+.product-body { -fx-padding: 14 6 6; -fx-spacing: 9; }
+.product-name { -fx-font-size: 14px; -fx-text-fill: #3D2B30; -fx-font-weight: bold; }
+.product-description { -fx-font-size: 9px; -fx-text-fill: #927D70; }
+.product-price { -fx-font-size: 21px; -fx-text-fill: #7B2A43; -fx-font-weight: bold; }
+.add-button { -fx-background-color: #7D2945; -fx-background-radius: 8; -fx-text-fill: #FFF5E7; -fx-padding: 9 11; -fx-font-size: 10px; }
+.add-button:hover { -fx-background-color: #A03B5A; }
+.add-button .ui-icon { -fx-stroke: #FFF5E7; }
+.unit-caption { -fx-font-size: 9px; -fx-text-fill: #927D70; }
+.catalog-empty { -fx-padding: 27 20; -fx-background-color: #F1EBE3; -fx-background-radius: 12; -fx-border-color: #E2D6CA; -fx-border-radius: 12; -fx-border-style: segments(5, 4); }
+.empty-symbol { -fx-background-color: #EADDD1; -fx-background-radius: 18; }
+.empty-icon { -fx-fill: transparent; -fx-stroke: #976B5A; -fx-stroke-width: 1.4; -fx-stroke-line-cap: round; -fx-stroke-line-join: round; }
+.empty-title { -fx-font-family: "Georgia"; -fx-font-size: 21px; -fx-text-fill: #5A3D3D; }
+.empty-copy { -fx-text-fill: #826C60; -fx-font-size: 12px; -fx-text-alignment: center; -fx-line-spacing: 3; }
+.bottom-note { -fx-padding: 4 0; }
+.footer-copy { -fx-font-family: "Georgia"; -fx-font-size: 11px; -fx-text-fill: #9A8170; }
+.order-panel { -fx-background-color: #FFFCF7; -fx-padding: 30 23 21; -fx-border-color: #E6DBD0; -fx-border-width: 0 0 0 1; }
+.order-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #3A272E; }
+.count-bubble { -fx-background-color: #EFE0E1; -fx-text-fill: #822D47; -fx-background-radius: 20; -fx-min-width: 30; -fx-alignment: center; -fx-padding: 6 10; -fx-font-size: 11px; -fx-font-weight: bold; }
+.table-box { -fx-background-color: #F3EBE2; -fx-border-color: #E6D9CB; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15; }
+.table-symbol { -fx-background-color: #E6D7CA; -fx-background-radius: 10; }
+.table-icon { -fx-fill: transparent; -fx-stroke: #8F634E; -fx-stroke-width: 1.4; -fx-stroke-line-cap: round; -fx-stroke-line-join: round; }
+.table-name { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4F3437; }
+.table-action { -fx-background-color: transparent; -fx-border-color: #D5BBAA; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #7E4E4B; -fx-font-size: 10px; -fx-padding: 9 7; }
+.table-action:hover { -fx-background-color: #E7D9CE; }
+.order-state { -fx-font-size: 9px; -fx-text-fill: #8C786A; }
+.order-state:active { -fx-text-fill: #5D724E; }
 .cart-scroll, .cart-scroll > .viewport { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
-.cart-item-name { -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #50343A; }
-.cart-price { -fx-text-fill: #873B4B; -fx-font-size: 11px; -fx-font-weight: bold; }
-.quantity { -fx-background-color: #F5EFE7; -fx-background-radius: 5; -fx-text-fill: #78484E; -fx-padding: 2 7; -fx-font-weight: bold; }
-.status-message { -fx-font-size: 11px; -fx-text-fill: #9B7B70; }
-.subtotal { -fx-font-size: 12px; -fx-text-fill: #63494A; }
-.total-label { -fx-font-size: 13px; -fx-font-weight: bold; }
-.total-price { -fx-font-size: 24px; -fx-text-fill: #76223D; -fx-font-weight: bold; }
-.checkout-button { -fx-background-color: linear-gradient(to right, #76223D, #9D3550); -fx-background-radius: 11; -fx-text-fill: #FFF5E7; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 16 9; -fx-effect: dropshadow(gaussian, rgba(112,29,53,0.19), 12, 0, 0, 4); }
+.order-item { -fx-padding: 13 0; -fx-border-color: #E9DED3; -fx-border-width: 0 0 1 0; }
+.item-avatar { -fx-background-color: #EFE1D1; -fx-text-fill: #845C45; -fx-background-radius: 11; -fx-font-family: "Georgia"; -fx-font-size: 17px; -fx-min-width: 43; -fx-pref-width: 43; -fx-min-height: 46; -fx-alignment: center; }
+.cart-item-name { -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #4A3038; }
+.cart-price { -fx-text-fill: #8A5F58; -fx-font-size: 10px; }
+.item-quantity { -fx-background-color: #F2E5E2; -fx-background-radius: 5; -fx-text-fill: #8B3C52; -fx-padding: 4 7; -fx-font-size: 10px; -fx-font-weight: bold; }
+.order-empty { -fx-padding: 26 10; -fx-spacing: 13; -fx-alignment: center; }
+.order-empty-title { -fx-font-family: "Georgia"; -fx-font-size: 18px; -fx-text-fill: #765A4F; -fx-text-alignment: center; }
+.order-empty-copy { -fx-text-fill: #9A8273; -fx-font-size: 11px; -fx-text-alignment: center; -fx-line-spacing: 3; }
+.status-message { -fx-font-size: 11px; -fx-text-fill: #84635A; -fx-line-spacing: 2; }
+.order-actions { -fx-border-color: #E6D8CB; -fx-border-width: 1 0 0; -fx-padding: 17 0 0; }
+.next-table { -fx-font-size: 11px; -fx-text-fill: #735149; }
+.checkout-button { -fx-background-color: linear-gradient(to right, #76233E, #94304F); -fx-background-radius: 9; -fx-text-fill: #FFF5E7; -fx-font-size: 12px; -fx-padding: 15 16; -fx-effect: dropshadow(gaussian, rgba(112,29,53,0.14), 12, 0, 0, 4); }
 .checkout-button:hover { -fx-background-color: #A33A57; }
-.fine-print { -fx-font-size: 8px; -fx-text-fill: #B4A397; }
-.separator .line { -fx-border-color: #E8DED4; -fx-border-width: 1 0 0; }
-.sidebar .separator .line { -fx-border-color: #2E2627; }
+.checkout-button:pressed { -fx-background-color: #682039; }
+.checkout-button .ui-icon { -fx-stroke: #FFF5E7; }
+.fine-print { -fx-font-size: 9px; -fx-text-fill: #9A8173; -fx-line-spacing: 2; }
+.separator .line { -fx-border-color: #E8DCD1; -fx-border-width: 1 0 0; }
+.sidebar .separator .line { -fx-border-color: #35282E; }
 .scroll-bar:vertical { -fx-background-color: transparent; -fx-pref-width: 7; }
 .scroll-bar:vertical .track { -fx-background-color: transparent; }
-.scroll-bar:vertical .thumb { -fx-background-color: #CDBEB4; -fx-background-radius: 4; }
+.scroll-bar:vertical .thumb { -fx-background-color: #CDBBAE; -fx-background-radius: 4; }
 .scroll-bar .increment-button, .scroll-bar .decrement-button { -fx-padding: 0; -fx-background-color: transparent; }
 .scroll-bar .increment-arrow, .scroll-bar .decrement-arrow { -fx-padding: 0; }
-.management-dialog { -fx-background-color: #F6F2EB; }
-.management-dialog .text-field, .management-dialog .text-area, .management-dialog .list-view { -fx-background-color: #FFFDFA; -fx-border-color: #E6DED4; -fx-border-radius: 6; -fx-background-radius: 6; }
-.management-dialog .text-field { -fx-padding: 10; }
-.management-dialog .list-cell { -fx-padding: 12; -fx-background-color: #FFFDFA; }
-.management-dialog .list-cell:filled:selected { -fx-background-color: #74223A; -fx-text-fill: #FFF5E5; }
-.form-feedback { -fx-text-fill: #873B4B; -fx-font-size: 12px; }
-.order-item { -fx-padding: 12; -fx-background-color: #F6F0E8; -fx-background-radius: 8; }
+.ui-icon { -fx-fill: transparent; -fx-stroke: #8B5D62; -fx-stroke-width: 1.6; -fx-stroke-line-cap: round; -fx-stroke-line-join: round; }
+/* Formulários e consultas seguem a mesma identidade da tela principal. */
+.management-dialog { -fx-background-color: #F7F3ED; -fx-padding: 0; }
+.management-dialog > .content { -fx-padding: 0; }
+.management-dialog > .header-panel { -fx-background-color: #F7F3ED; -fx-padding: 22 26 0; }
+.dialog-eyebrow { -fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #9C6D63; }
+.dialog-title { -fx-font-family: "Georgia"; -fx-font-size: 27px; -fx-text-fill: #502F3A; }
+.dialog-copy { -fx-font-size: 12px; -fx-text-fill: #887365; }
+.dialog-content { -fx-padding: 22 26; }
+.form-panel { -fx-background-color: #FFFCF7; -fx-background-radius: 12; -fx-border-color: #E4D6C9; -fx-border-radius: 12; -fx-padding: 20; }
+.panel-heading { -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #513039; }
+.field-label { -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #79584E; }
+.form-hint { -fx-font-size: 10px; -fx-text-fill: #947B6B; -fx-line-spacing: 2; }
+.management-dialog .text-field { -fx-background-color: #FFFDF9; -fx-border-color: #D9C9BC; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 12; -fx-font-size: 12px; -fx-prompt-text-fill: #AB9586; -fx-background-insets: 0; }
+.management-dialog .text-field:focused { -fx-border-color: #9A4B63; -fx-effect: dropshadow(gaussian, rgba(148,63,84,0.10), 5, 0.1, 0, 0); }
+.management-dialog .list-view { -fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0; -fx-background-insets: 0; }
+.management-dialog .list-cell { -fx-padding: 5 0; -fx-background-color: transparent; }
+.management-dialog .list-cell .record-row { -fx-background-color: #FFFCF7; -fx-border-color: #E7DAD0; -fx-border-radius: 9; -fx-background-radius: 9; -fx-padding: 13; }
+.management-dialog .list-cell:filled:hover .record-row { -fx-background-color: #F0E5DB; -fx-border-color: #CAB19F; }
+.management-dialog .list-cell:filled:selected .record-row { -fx-background-color: #F1E0DE; -fx-border-color: #AE7280; }
+.record-name { -fx-font-size: 12px; -fx-text-fill: #56333E; -fx-font-weight: bold; }
+.record-meta { -fx-font-size: 10px; -fx-text-fill: #937567; }
+.record-value { -fx-font-size: 13px; -fx-text-fill: #7E2F47; -fx-font-weight: bold; }
+.record-number { -fx-font-family: "Georgia"; -fx-font-size: 17px; -fx-text-fill: #865945; -fx-background-color: #EDDFD1; -fx-background-radius: 8; -fx-min-width: 46; -fx-min-height: 42; -fx-alignment: center; -fx-padding: 7; }
+.record-state { -fx-font-size: 9px; -fx-text-fill: #62734F; -fx-background-color: #E8EBDF; -fx-background-radius: 5; -fx-padding: 5 7; }
+.management-dialog .text-area { -fx-background-color: transparent; -fx-border-width: 0; -fx-background-insets: 0; -fx-font-size: 12px; -fx-text-fill: #715448; }
+.management-dialog .text-area .content { -fx-background-color: #FFFCF7; -fx-padding: 10 0; }
+.management-dialog .button-bar { -fx-background-color: #F0E8DF; -fx-border-color: #E2D3C5; -fx-border-width: 1 0 0; -fx-padding: 14 26; }
+.management-dialog .button-bar .button { -fx-background-color: #FFFDF9; -fx-border-color: #D6C5B8; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 10 18; -fx-text-fill: #79584E; -fx-font-size: 11px; }
+.management-dialog .button-bar .button:default { -fx-background-color: #7E2945; -fx-text-fill: #FFF5E7; -fx-border-color: #7E2945; }
+.management-dialog .button-bar .button:hover { -fx-background-color: #EADDD3; }
+.management-dialog .button-bar .button:default:hover { -fx-background-color: #963753; }
+.form-feedback { -fx-text-fill: #5E744E; -fx-font-size: 11px; -fx-line-spacing: 2; }
+.feedback-error { -fx-text-fill: #A14350; }
+.dialog-header { -fx-padding: 23 26 0; }
+.management-dialog > .dialog-content { -fx-padding: 22 26; }
