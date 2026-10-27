@@ -13,7 +13,7 @@ public class NucitaPreviewApp extends Application {
         FXMLLoader loader = new FXMLLoader(
                 NucitaPreviewApp.class.getResource("/view/exemplo-cardapio.fxml"));
         Scene scene = new Scene(loader.load(), 1440, 900);
-        stage.setTitle("Nucita Lanches | Prévia do cardápio");
+        stage.setTitle("Nucita Lanches | Atendimento");
         stage.setMinWidth(1220);
         stage.setMinHeight(730);
         stage.getIcons().add(new javafx.scene.image.Image(

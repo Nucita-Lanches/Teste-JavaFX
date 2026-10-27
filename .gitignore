@@ -1,0 +1,11 @@
+# Artefatos gerados pelo Maven e pelo iniciador local
+target/
+build/
+*.class
+
+# Configuração local da IDE e arquivos temporários
+.idea/
+*.iml
+work/
+*.log
+.DS_Store
